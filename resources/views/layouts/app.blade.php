@@ -76,6 +76,11 @@
         </nav>
 
         <main class="py-4">
+            <div class="sidebar">
+                <a class="{{Route::current()->getName() == 'home' ? 'active' : ''}}" href="/home">Mata Kuliah</a>
+                <a class="{{Route::current()->getName() == 'transaksi' ? 'active' : ''}}" href="/transaksi">Transaksi</a>
+            </div>
+
             @yield('content')
         </main>
     </div>
