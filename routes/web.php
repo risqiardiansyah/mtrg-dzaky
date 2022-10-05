@@ -31,3 +31,9 @@ Route::get('/transaksi', [App\Http\Controllers\HomeController::class, 'indexTran
 Route::get('/transaksi/add', [App\Http\Controllers\HomeController::class, 'addTransaksi'])->name('add-transaksi');
 Route::post('/transaksi/add', [App\Http\Controllers\HomeController::class, 'addTransaksiAction'])->name('add-transaksi-action');
 Route::post('/laporan/cetak', [App\Http\Controllers\HomeController::class, 'cetakLaporan'])->name('cetak-laporan');
+
+Route::get('/soal', [App\Http\Controllers\HomeController::class, 'indexSoal'])->name('soal');
+Route::get('/soal/add', [App\Http\Controllers\HomeController::class, 'addSoal'])->name('add-soal');
+Route::get('/soal/list/{kode_soal}', [App\Http\Controllers\HomeController::class, 'listSoal'])->name('list-soal');
+Route::post('/soal/add', [App\Http\Controllers\HomeController::class, 'addSoalAction'])->name('add-soal=action');
+Route::post('/soal/list/add', [App\Http\Controllers\HomeController::class, 'addListSoalAction'])->name('add-list-soal=action');

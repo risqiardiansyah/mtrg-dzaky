@@ -138,4 +138,70 @@ class HomeController extends Controller
 
         return $pdf->download();
     }
+
+    public function indexSoal()
+    {
+        $select = [
+            'tr_data.*',
+            'tbl_matkul.nama_matkul',
+            'tbl_dosen.nama_dosen'
+        ];
+        $data = DB::table('tr_data')
+            ->select($select)
+            ->leftJoin('tbl_matkul', 'tbl_matkul.kode_matkul', '=', 'tr_data.kode_matkul')
+            ->leftJoin('tbl_dosen', 'tbl_dosen.kode_dosen', '=', 'tr_data.kode_dosen')
+            ->get();
+
+        return view('soal.index', compact('data'));
+    }
+
+    public function addSoal()
+    {
+        $matkul = DB::table('tbl_matkul')->get();
+        $dosen = DB::table('tbl_dosen')->get();
+
+        return view('soal.add', compact('matkul', 'dosen'));
+    }
+
+    public function addSoalAction(Request $request)
+    {
+        $data = [
+            'tr_data_code' => 'SOAL-' . rand(0, 1000),
+            'nama_ujian' => $request->nama_ujian,
+            'kode_matkul' => $request->kode_matkul,
+            'kode_dosen' => $request->kode_dosen,
+            'tahun_akademik' => $request->tahun_akademik,
+            'semester' => $request->semester,
+            'kelas' => $request->kelas,
+            'tipe_soal' => $request->tipe_soal,
+        ];
+        DB::table('tr_data')->insert($data);
+
+        return redirect('/soal');
+    }
+
+    public function listSoal($kode_soal)
+    {
+        $data = DB::table('tr_soal')->where('tr_data_code', $kode_soal)->get();
+
+        return view('soal.list_soal', compact('data', 'kode_soal'));
+    }
+
+    public function addListSoalAction(Request $request)
+    {
+        $data = [
+            'tr_soal_code' => 'P-' . rand(0, 1000),
+            'tr_data_code' => $request->tr_data_code,
+            'desc_soal' => $request->desc_soal,
+            'option_a' => $request->option_a,
+            'option_b' => $request->option_b,
+            'option_c' => $request->option_c,
+            'option_d' => $request->option_d,
+            'option_e' => $request->option_e,
+            'kunci_jawaban' => $request->kunci_jawaban,
+        ];
+        DB::table('tr_soal')->insert($data);
+
+        return redirect('/soal/list/' . $request->tr_data_code);
+    }
 }

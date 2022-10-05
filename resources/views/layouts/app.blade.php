@@ -18,6 +18,14 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <script>
+        $('#myModal').on('shown.bs.modal', function () {
+          $('#myInput').trigger('focus')
+        })
+    </script>
 </head>
 <body>
     <div id="app">
@@ -76,10 +84,13 @@
         </nav>
 
         <main class="py-4">
-            <div class="sidebar">
-                <a class="{{Route::current()->getName() == 'home' ? 'active' : ''}}" href="/home">Mata Kuliah</a>
-                <a class="{{Route::current()->getName() == 'transaksi' ? 'active' : ''}}" href="/transaksi">Transaksi</a>
-            </div>
+            @if (isset(Auth::user()->id))
+                <div class="sidebar">
+                    <a class="{{Route::current()->getName() == 'home' ? 'active' : ''}}" href="/home">Mata Kuliah</a>
+                    <a class="{{Route::current()->getName() == 'transaksi' ? 'active' : ''}}" href="/transaksi">Transaksi</a>
+                    <a class="{{Route::current()->getName() == 'soal' ? 'active' : ''}}" href="/soal">Soal</a>
+                </div>
+            @endif
 
             @yield('content')
         </main>
