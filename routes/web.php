@@ -37,3 +37,7 @@ Route::get('/soal/add', [App\Http\Controllers\HomeController::class, 'addSoal'])
 Route::get('/soal/list/{kode_soal}', [App\Http\Controllers\HomeController::class, 'listSoal'])->name('list-soal');
 Route::post('/soal/add', [App\Http\Controllers\HomeController::class, 'addSoalAction'])->name('add-soal=action');
 Route::post('/soal/list/add', [App\Http\Controllers\HomeController::class, 'addListSoalAction'])->name('add-list-soal=action');
+Route::get('/kerjakan/{tr_data_code}/{data_jawaban_code}/{tr_soal_code}', [App\Http\Controllers\HomeController::class, 'kerjakanSoal']);
+Route::post('/kerjakan', [App\Http\Controllers\HomeController::class, 'kerjakanSoalAction']);
+Route::post('/simpan_jawaban', [App\Http\Controllers\HomeController::class, 'simpanJawaban']);
+Route::get('/hasil/{tr_data_code}/{data_jawaban_code}', [App\Http\Controllers\HomeController::class, 'hasilUjian']);
