@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class HomeController extends Controller
 {
@@ -24,8 +25,19 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+
+    public function indexLogin()
+    {
+        return redirect('/login');
+    }
+
     public function index()
     {
+        $role = Auth::user()->role;
+        if ($role != 'admin') {
+            return redirect('/soal');
+        }
+
         $data = DB::table('tbl_matkul')->get();
 
         return view('home', compact('data'));
@@ -150,8 +162,11 @@ class HomeController extends Controller
         $data = DB::table('tr_data')
             ->select($select)
             ->leftJoin('tbl_matkul', 'tbl_matkul.kode_matkul', '=', 'tr_data.kode_matkul')
-            ->leftJoin('tbl_dosen', 'tbl_dosen.kode_dosen', '=', 'tr_data.kode_dosen')
-            ->get();
+            ->leftJoin('tbl_dosen', 'tbl_dosen.kode_dosen', '=', 'tr_data.kode_dosen');
+        if (Auth::user()->role == 'mahasiswa') {
+            $data = $data->where('tr_data.kelas', Auth::user()->kelas);
+        }
+        $data = $data->get();
         for ($i = 0; $i < count($data); $i++) {
             $check = DB::table('tr_jawaban_data')
                 ->where('tr_data_code', $data[$i]->tr_data_code)
@@ -370,5 +385,43 @@ class HomeController extends Controller
         $tidak_dijawab = $jml_soal - ($benar + $salah);
 
         return view('soal.hasil', compact('data_jawaban', 'jml_soal', 'benar', 'salah', 'tidak_dijawab'));
+    }
+
+    public function indexPengguna()
+    {
+        $role = Auth::user()->role;
+        if ($role != 'admin') {
+            return redirect('/');
+        }
+
+        $data = DB::table('users')->where('id', '!=', Auth::user()->id)->get(['id', 'name', 'email', 'kode_mahasiswa', 'role']);
+
+        return view('pengguna.index', compact('data'));
+    }
+
+    public function tambahPengguna($role)
+    {
+        return view('pengguna.add', compact('role'));
+    }
+
+    public function tambahPenggunaAction(Request $request)
+    {
+        $password = $request->password;
+        if (empty($request->password)) {
+            $password = '123';
+        }
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'kode_mahasiswa' => $request->kode_mahasiswa,
+            'kode_dosen' => $request->kode_dosen,
+            'kelas' => $request->kelas,
+            'password' => Hash::make($password),
+            'role' => $request->role,
+        ];
+        DB::table('users')->insert($data);
+
+        return redirect('/pengguna');
     }
 }

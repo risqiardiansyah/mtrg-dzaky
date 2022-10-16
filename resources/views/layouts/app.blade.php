@@ -54,11 +54,11 @@
                                 </li>
                             @endif
 
-                            @if (Route::has('register'))
+                            {{-- @if (Route::has('register'))
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
-                            @endif
+                            @endif --}}
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -85,11 +85,18 @@
 
         <main class="py-4">
             @if (isset(Auth::user()->id))
-                <div class="sidebar">
+            <div class="sidebar">
+                @if (Auth::user()->role == 'admin')
+                    <a class="{{Route::current()->getName() == 'pengguna' ? 'active' : ''}}" href="/pengguna">Pengguna</a>
                     <a class="{{Route::current()->getName() == 'home' ? 'active' : ''}}" href="/home">Mata Kuliah</a>
                     <a class="{{Route::current()->getName() == 'transaksi' ? 'active' : ''}}" href="/transaksi">Transaksi</a>
                     <a class="{{Route::current()->getName() == 'soal' ? 'active' : ''}}" href="/soal">Soal</a>
-                </div>
+                @elseif(Auth::user()->role == 'mahasiswa')
+                    <a class="{{Route::current()->getName() == 'soal' ? 'active' : ''}}" href="/soal">Soal</a>
+                @else
+                    <a class="{{Route::current()->getName() == 'soal' ? 'active' : ''}}" href="/soal">Soal</a>
+                @endif
+            </div>
             @endif
 
             @yield('content')

@@ -14,11 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [App\Http\Controllers\HomeController::class, 'indexLogin']);
 
 Auth::routes();
+
+Route::get('/pengguna', [App\Http\Controllers\HomeController::class, 'indexPengguna']);
+Route::get('/pengguna/add/{role}', [App\Http\Controllers\HomeController::class, 'tambahPengguna']);
+Route::post('/pengguna/add', [App\Http\Controllers\HomeController::class, 'tambahPenggunaAction']);
+Route::get('/pengguna/edit/{id}', [App\Http\Controllers\HomeController::class, 'editPengguna']);
+Route::post('/pengguna/edit', [App\Http\Controllers\HomeController::class, 'editPenggunaAction']);
+Route::get('/pengguna/delete/{id}', [App\Http\Controllers\HomeController::class, 'deletePenggunaAction']);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/matkul/add', [App\Http\Controllers\HomeController::class, 'tambahMatkul'])->name('tambah-matkul');
